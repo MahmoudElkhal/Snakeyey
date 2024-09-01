@@ -1,41 +1,32 @@
 package org.example;
 
-import org.example.network.SocketClient;
-import org.example.network.SocketServer;
-import org.example.snake.SnakeFrame;
-import org.example.snake.SnakeFrame2;
+import org.example.snake.ClientSnakeFrame;
+import org.example.snake.ServerSnakeFrame;
 
-import javax.swing.*;
-import java.awt.*;
 
-/**
- * Hello world!
- *
- */
-public class App 
+public class App
 {
-    public static void main( String[] args )
-    {
+    public static void main( String[] args ) throws InterruptedException {
 
         Thread serverThread = new Thread(() -> {
             try {
-                SnakeFrame.main(null);
+                ServerSnakeFrame.main(null);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         });
         serverThread.start();
-
+        Thread.sleep(100);
         // Create and start a separate thread for the client
-        // Thread clientThread = new Thread(() -> {
-        //     try {
-        //         SocketClient.main(null);
-        //     } catch (Exception e) {
-        //         throw new RuntimeException(e);
-        //     }
-        // });
-        // clientThread.start();
-
+         Thread clientThread = new Thread(() -> {
+             try {
+                 ClientSnakeFrame.main(null);
+             } catch (Exception e) {
+                 throw new RuntimeException(e);
+             }
+         });
+         clientThread.start();
+        System.out.println("application started");
 
     }
 }
