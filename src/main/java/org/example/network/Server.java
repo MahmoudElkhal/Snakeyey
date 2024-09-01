@@ -40,7 +40,7 @@ public class Server {
 
                 // Start threads for reading and writing
                 new Thread(new Reader()).start();
-//                new Thread(new Writer()).start();
+                new Thread(new Writer()).start();
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -76,18 +76,19 @@ public class Server {
         private class Writer implements Runnable {
             @Override
             public void run() {
-                try {
+                while(serverSnakeToSend != null) {
+
+                    try {
                         out.writeObject(serverSnakeToSend);
+                        out.flush();
+                        out.reset();
+                        System.out.println("Server sent: " + ((SerializedServerSnake)(serverSnakeToSend)).x + ((SerializedServerSnake)(serverSnakeToSend)).y);
                         Thread.sleep(100);
 
-                } catch (IOException | InterruptedException e) {
-                    e.printStackTrace();
-                } finally {
-                    try {
-                        clientSocket.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    } catch (IOException | InterruptedException e) {
+                        throw new RuntimeException(e);
                     }
+
                 }
             }
         }

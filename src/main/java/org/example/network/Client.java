@@ -21,7 +21,7 @@ public class Client {
         // Initialize input and output streams
 
         // Start threads for reading and writing
-//        new Thread(new Reader()).start();
+        new Thread(new Reader()).start();
         new Thread(new Writer()).start();
 
     }
@@ -30,17 +30,24 @@ public class Client {
         @Override
         public void run() {
             try {
-                while ((serverSnakeToReceive = in.readObject()) != null) {
-                    System.out.println("Client received: " + serverSnakeToReceive);
+                System.out.println("client reading");
+                while (true) {
+                    try {
+                        serverSnakeToReceive = in.readObject();
+                        System.out.println("Client received: " + ((SerializedServerSnake)serverSnakeToReceive).x + ((SerializedServerSnake)serverSnakeToReceive).y);
+//                            Thread.sleep(100);
+                    } catch (EOFException eof) {
+                        // Handle EOFException but do not quit the loop
+                        System.out.println("EOFException encountered, waiting for more data...");
+                        try {
+                            Thread.sleep(100); // Add a small delay before retrying
+                        } catch (InterruptedException ie) {
+                            Thread.currentThread().interrupt(); // Restore interrupted status
+                        }
+                    }
                 }
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
-            } finally {
-                try {
-                    socket.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
             }
         }
     }
@@ -51,7 +58,6 @@ public class Client {
             while(clientSnakeToSend != null) {
 
                 try {
-                        Object o = new Object();
                         out.writeObject(clientSnakeToSend);
                         out.flush();
                         out.reset();

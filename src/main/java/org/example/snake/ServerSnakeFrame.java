@@ -35,6 +35,10 @@ public class ServerSnakeFrame extends JFrame implements KeyListener, ActionListe
             yy.add(0,300);
             yy.add(1,300);
             yy.add(2,300);
+            SerializedServerSnake serverSnake = new SerializedServerSnake(xx,yy,x_food,y_food);
+            server.serverSnakeToSend=serverSnake;
+            System.out.println("injected "+ serverSnake + "from serverFrame to server network");
+
         setTitle("Snake Game Server");
         setSize(1000, 1000);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
