@@ -1,7 +1,7 @@
-package org.example.snake;
-import org.example.network.Client;
-import org.example.network.SerializedServerSnake;
-import org.example.network.SerializedClientSnake;
+package org.example.client;
+import org.example.shared.Direction;
+import org.example.shared.SerializedServerSnake;
+import org.example.shared.SerializedClientSnake;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -14,7 +14,10 @@ import java.util.List;
 import java.util.Random;
 
 public class ClientSnakeFrame extends JFrame implements KeyListener, ActionListener {
-    Client client = new Client("localhost",8888);
+    String host = "localhost";  //default host
+    int port = 8888;    //default port
+    Client client;
+
     int x_food = 100;
     int y_food = 100;
     int sqUnit = 20;
@@ -28,7 +31,8 @@ public class ClientSnakeFrame extends JFrame implements KeyListener, ActionListe
     boolean lost = false;
     boolean clientLost = false;
 
-    ClientSnakeFrame() throws IOException {
+    ClientSnakeFrame(String host,int port) throws IOException {
+        client = new Client(host, port);
         xx.add(0,100);
         xx.add(1,120);
         xx.add(2,140);
@@ -52,7 +56,7 @@ public class ClientSnakeFrame extends JFrame implements KeyListener, ActionListe
     public void paint(Graphics g) {
 //        super.paint(g);
 
-        g.setColor(Color.BLACK);    // filling the background
+        g.setColor(Color.DARK_GRAY);    // filling the background
         g.fillRect(0, 0, getWidth(), getHeight());
 
         g.setColor(Color.MAGENTA);    // constructing the snake
@@ -173,10 +177,11 @@ public class ClientSnakeFrame extends JFrame implements KeyListener, ActionListe
     }
 
     public static void main(String[] args) throws IOException {
+        final String host = (args.length==2) ? args[0] : "localhost";
+        final int port = (args.length==2) ? Integer.parseInt(args[1]) : 8888;
         SwingUtilities.invokeLater(()->{
-            ClientSnakeFrame frame = null;
             try {
-                frame = new ClientSnakeFrame();
+            ClientSnakeFrame frame = new ClientSnakeFrame(host,port);
                 frame.setVisible(true);
                 frame.startClient();
             } catch (IOException e) {

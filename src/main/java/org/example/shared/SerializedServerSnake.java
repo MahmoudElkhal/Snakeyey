@@ -1,4 +1,4 @@
-package org.example.network;
+package org.example.shared;
 
 import java.io.Serializable;
 import java.util.List;

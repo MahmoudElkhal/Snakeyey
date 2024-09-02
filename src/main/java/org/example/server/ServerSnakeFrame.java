@@ -1,7 +1,8 @@
-package org.example.snake;
-import org.example.network.SerializedServerSnake;
-import org.example.network.SerializedClientSnake;
-import org.example.network.Server;
+package org.example.server;
+import org.example.shared.SerializedServerSnake;
+import org.example.shared.SerializedClientSnake;
+import org.example.shared.Direction;
+
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -14,7 +15,8 @@ import java.util.List;
 import java.util.Random;
 
 public class ServerSnakeFrame extends JFrame implements KeyListener, ActionListener {
-    public Server server = new Server();
+    int port=8888;
+    public Server server;
     int x_food = 100;
     int y_food = 100;
     int sqUnit = 20;
@@ -28,7 +30,9 @@ public class ServerSnakeFrame extends JFrame implements KeyListener, ActionListe
     boolean lost = false;
     boolean clientLost = false;
 
-    ServerSnakeFrame(){
+    ServerSnakeFrame(int inputPort){
+            port=inputPort;
+            server=new Server(inputPort);
             xx.add(0,100);
             xx.add(1,120);
             xx.add(2,140);
@@ -51,7 +55,7 @@ public class ServerSnakeFrame extends JFrame implements KeyListener, ActionListe
     public void paint(Graphics g) {
 //        super.paint(g);
 
-        g.setColor(Color.BLACK);    // filling the background
+        g.setColor(Color.DARK_GRAY);    // filling the background
         g.fillRect(0, 0, getWidth(), getHeight());
 
         g.setColor(Color.MAGENTA);    // constructing the snake
@@ -157,7 +161,7 @@ public class ServerSnakeFrame extends JFrame implements KeyListener, ActionListe
             y_food=r.nextInt((int)(this.getHeight()/sqUnit))*sqUnit;
         }
         if(xx.get(0)<0 || xx.get(0)>this.getWidth() || yy.get(0)>this.getHeight() || yy.get(0)<0){
-//            lost=true;
+            lost=true;
         }
         if(xx2.size()>0 && ( xx2.get(0)<0 || xx2.get(0)>this.getWidth() || yy2.get(0)>this.getHeight() || yy2.get(0)<0 )){
             clientLost=true;
@@ -175,8 +179,9 @@ public class ServerSnakeFrame extends JFrame implements KeyListener, ActionListe
     }
 
     public static void main(String[] args) throws IOException {
+        final int inputPort= (args.length==1) ? Integer.parseInt(args[0]):8888 ;
         SwingUtilities.invokeLater(()->{
-            ServerSnakeFrame frame = new ServerSnakeFrame();
+            ServerSnakeFrame frame = new ServerSnakeFrame(inputPort);
             try {
                 frame.startServer();
             } catch (IOException e) {

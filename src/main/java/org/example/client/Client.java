@@ -1,4 +1,7 @@
-package org.example.network;
+package org.example.client;
+
+import org.example.shared.SerializedClientSnake;
+import org.example.shared.SerializedServerSnake;
 
 import java.io.*;
 import java.net.*;

@@ -1,4 +1,7 @@
-package org.example.network;
+package org.example.server;
+
+import org.example.shared.SerializedClientSnake;
+import org.example.shared.SerializedServerSnake;
 
 import java.io.*;
 import java.net.*;
@@ -6,9 +9,14 @@ import java.net.*;
 public class Server {
     public Object serverSnakeToSend;
     public Object clientSnakeToReceive;
+    public int port=8888;
+
+    public Server(int port) {
+        this.port = port;
+    }
 
     public void start() throws IOException {
-    ServerSocket serverSocket = new ServerSocket(8888);
+    ServerSocket serverSocket = new ServerSocket(port);
         System.out.println("Server started...");
         while (true) {
             try {
@@ -28,7 +36,6 @@ public class Server {
 
         public ClientHandler(Socket socket) {
             this.clientSocket = socket;
-            
         }
 
         @Override
