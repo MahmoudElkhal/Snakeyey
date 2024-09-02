@@ -7,5 +7,9 @@ java -jar bin/server.jar [port]
 
 To start the client :
 
-java -jar bin/client.jar [server-address] [port]
+java -jar bin/client.jar [server-address] [port] 
+
+defaults:
+server-address="localhost"
+port="8888"
 
